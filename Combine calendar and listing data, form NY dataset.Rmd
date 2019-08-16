@@ -1,0 +1,88 @@
+---
+title: "Airbnb analyses NY"
+output: html_notebook
+---
+
+#Load libraries
+```{r}
+
+library("tidyverse")
+library("broom")
+library("caret")
+library("knitr")
+library("car")
+library("kableExtra")
+library("tidyr")
+library("psych")
+library("dplyr")
+library("utf8")
+library("sentimentr")
+library("ggpubr")
+library("corrplot")
+library("data.table")
+library("tidycensus")
+library("faraway")
+library("ISLR")
+library("Metrics")
+
+```
+
+#load files
+```{r}
+
+listings_jun18 <- read_csv("listings_jun18.csv")
+
+calendar_jun18 <- read_csv("calendar_jun18.csv")
+
+```
+
+
+```{r}
+
+jun_price <- na.omit(calendar_jun18)
+
+jun <- subset(jun_price, date> "2018-09-01" & date < "2018-09-30")
+
+jun$price <- parse_number(jun$price)
+
+mean_price_jun <- aggregate(jun[, 4], list(jun$listing_id), mean)
+
+mean_price_jun <- mean_price_jun %>% 
+  rename(
+    mean_price = price,
+    id = Group.1)
+
+listings_jun18 <- merge(listings_jun18, mean_price_jun, all = TRUE)
+
+write.csv(listings_jun18, "airbnb dataset new york.csv")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
